@@ -6,11 +6,19 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 import sys
 
-page_limit = float('inf')
-
+TITLE_LIMIT = float('inf')
+OUT_FILE = ""
+for i,arg in enumerate(sys.argv):
+    if arg == '-o':
+        OUT_FILE = sys.argv[i+1]
+    if arg == '-n':
+        TITLE_LIMIT = int(sys.argv[i+1])
+if OUT_FILE == "":
+    print('please specify outfile')
+    sys.exit(1)
 reviews = []
 driver = webdriver.Firefox()
-movie_titles = get_movies()
+movie_titles = get_movies(TITLE_LIMIT)
 for movie in movie_titles:
     has_next_button = True
     url = f'https://www.rottentomatoes.com/m/{movie}/reviews?type=user'
@@ -18,6 +26,7 @@ for movie in movie_titles:
     if test_response.status_code != 200:
         print(f'{url} is not valid')
         continue
+    print(f'scraping {movie}')
     driver.get(url)
     button_class='prev-next-paging__button-right'
     btn = True
@@ -39,7 +48,7 @@ for movie in movie_titles:
             text = soup.find('p', {'class': 'audience-reviews__review'}).text
             rating = 0
             stars = soup.find('span', {'class':'star-display'})
-            print(text)
+            #print(text)
             
             for star in stars:
                 star = star.get('class')
@@ -52,14 +61,12 @@ for movie in movie_titles:
                 else:
                     print('----------invalid star display')
             reviews.append((text,rating))
-            break # only read first reveiw
         try:
             btn = driver.find_element(By.CLASS_NAME, button_class)
             btn.click()
         except Exception:
             has_next_button = False
         page_n+=1
-        if page_n > page_limit: # only crawl first 'page_limit' pages
-            break
-with open('reviews', 'wb') as f:
+
+with open(OUT_FILE, 'wb') as f:
     pickle.dump(reviews, f)
