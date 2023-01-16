@@ -13,4 +13,10 @@ reveiws are calculated by counting the number of stars the are either full, half
 lastly, it will produce a 2D python list where reviews[i][0] is the text of the ith review and reviews[i][1] is the numeric rating of the ith review. \
 The list is stored as a picked python object in the file of your chosing.
 
+### contribute
+I want there to be a capability to limit the reviews in various ways. \
+Perhaps filter by rating (eg. only scrape polorized reviews, only scrape 4 star reviews etc.) \
+Only scrape first N reviews for each movie. \
+
+
 
