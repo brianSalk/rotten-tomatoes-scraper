@@ -13,16 +13,14 @@ for i,arg in enumerate(sys.argv):
         OUT_FILE = sys.argv[i+1]
     if arg == '-n':
         TITLE_LIMIT = int(sys.argv[i+1])
+if TITLE_LIMIT == float('inf'):
+    print('please specify a title limit: -n <limit>')
 if OUT_FILE == "":
     print('please specify outfile')
     sys.exit(1)
 reviews = []
 driver = webdriver.Firefox()
-<<<<<<< HEAD
-movie_titles = get_movies(5)
-=======
 movie_titles = get_movies(TITLE_LIMIT)
->>>>>>> b62271b5435d08644e2d583f332e623386697415
 for movie in movie_titles:
     has_next_button = True
     url = f'https://www.rottentomatoes.com/m/{movie}/reviews?type=user'
