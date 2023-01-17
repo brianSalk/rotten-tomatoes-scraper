@@ -10,7 +10,7 @@ page_limit = float('inf')
 
 reviews = []
 driver = webdriver.Firefox()
-movie_titles = get_movies()
+movie_titles = get_movies(5)
 for movie in movie_titles:
     has_next_button = True
     url = f'https://www.rottentomatoes.com/m/{movie}/reviews?type=user'
