@@ -2,9 +2,13 @@ import requests
 import pickle
 from get_movies import get_movies, print_movies
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 import sys
+options = Options()
+options.headless = True
+
 
 TITLE_LIMIT = float('inf')
 OUT_FILE = ""
@@ -19,7 +23,7 @@ if OUT_FILE == "":
     print('please specify outfile')
     sys.exit(1)
 reviews = []
-driver = webdriver.Firefox()
+driver = webdriver.Firefox(options=options)
 movie_titles = get_movies(TITLE_LIMIT)
 for movie in movie_titles:
     has_next_button = True
