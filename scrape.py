@@ -17,11 +17,15 @@ OUT_FILE = ""
 parser = argparse.ArgumentParser()
 parser.add_argument('-o','--out-file', type=str,default='out', help='name of file to store pickled data')
 parser.add_argument('-n','--title-limit', type=int,default=100, help='limit number of titles')
+parser.add_argument('-b', '--browser', type=str, default='firefox', help='select browser to scrape with')
 args = parser.parse_args()
 # end argparse stuff
+if args.browser.lower() == 'firefox':
+    driver = webdriver.Firefox(options=options)
+elif args.browser.lower() == 'chrome':
+    driver = webdriver.Chrome(options=options)
 
 reviews = []
-driver = webdriver.Firefox(options=options)
 movie_titles = get_movies(args.title_limit)
 for movie in movie_titles:
     has_next_button = True
