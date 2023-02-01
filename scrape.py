@@ -6,25 +6,23 @@ from selenium.webdriver.firefox.options import Options
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 import sys
+import argparse
 options = Options()
 options.headless = True
 
 
 TITLE_LIMIT = float('inf')
 OUT_FILE = ""
-for i,arg in enumerate(sys.argv):
-    if arg == '-o':
-        OUT_FILE = sys.argv[i+1]
-    if arg == '-n':
-        TITLE_LIMIT = int(sys.argv[i+1])
-if TITLE_LIMIT == float('inf'):
-    print('please specify a title limit: -n <limit>')
-if OUT_FILE == "":
-    print('please specify outfile')
-    sys.exit(1)
+# do argparse stuff
+parser = argparse.ArgumentParser()
+parser.add_argument('-o','--out-file', type=str,default='out', help='name of file to store pickled data')
+parser.add_argument('-n','--title-limit', type=int,default=100, help='limit number of titles')
+args = parser.parse_args()
+# end argparse stuff
+
 reviews = []
 driver = webdriver.Firefox(options=options)
-movie_titles = get_movies(TITLE_LIMIT)
+movie_titles = get_movies(args.title_limit)
 for movie in movie_titles:
     has_next_button = True
     url = f'https://www.rottentomatoes.com/m/{movie}/reviews?type=user'
@@ -74,5 +72,5 @@ for movie in movie_titles:
             has_next_button = False
         page_n+=1
 
-with open(OUT_FILE, 'wb') as f:
+with open(args.out_file, 'wb') as f:
     pickle.dump(reviews, f)
